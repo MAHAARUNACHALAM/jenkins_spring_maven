@@ -28,12 +28,9 @@ pipeline {
             steps {
                 sh "sudo docker login -u mahaarunachalam -p dckr_pat_Kiveg21MryV2aptjdom8IvsQTJA"
                 sh "sudo docker build -t jenkinsmaven ."
-                sh "sudo docker tag jenkinsmaven:latest my-registry/jenkinsmaven:build-${BUILD_NUMBER}"
+                sh "sudo docker tag jenkinsmaven:latest mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER}"
                 sh "sudo docker push mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER}"
-                //stop and remove the container if already running with previous build number tag
-
-                // sh "docker stop $(docker ps -a -q --filter ancestor=mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER-1} --format="{{.ID}}")"
-                // sh "docker rm $(docker ps -a -q --filter ancestor=mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER-1} --format="{{.ID}}")"
+            
                 sh "sudo docker run -p 8080:8080 -d mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER}"
             }
         }
