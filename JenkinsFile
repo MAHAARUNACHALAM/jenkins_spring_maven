@@ -4,8 +4,6 @@ pipeline {
     stages {
         stage('Build and Test') {
             steps {
-                //clear the workspace
-                sh "rm -rf *"
                 //mvn clean package say version 17 not supported
                 sh "mvn clean package"
             }
