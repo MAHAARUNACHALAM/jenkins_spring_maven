@@ -8,25 +8,19 @@ pipeline {
                 sh "mvn clean package"
             }
         }
-        stage('Create Git Tag') {
-            steps {
-                script {
-                    def buildTag = "build-${BUILD_NUMBER}"
-                    sh "echo Creating tag ${buildTag}"
+//         stage('Create Git Tag') {
+//             steps {
+//                 script {
+//                     def buildTag = "build-${BUILD_NUMBER}"
+//                     sh "echo Creating tag ${buildTag}"
                    
-                   withCredentials([usernamePassword(credentialsId: '7c7f7ca3-160a-4584-bc51-0922d327e164', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-    sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
-    sh "git push origin ${buildTag}"
-}
-
-                    
-                    // withCredentials([usernamePassword(credentialsId: '7c7f7ca3-160a-4584-bc51-0922d327e164')]) {
-                    //     sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
-                    //     sh "git push origin ${buildTag}"
-                    // }
-                }
-            }
-        }
+//                    withCredentials([usernamePassword(credentialsId: '7c7f7ca3-160a-4584-bc51-0922d327e164', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+//     sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
+//     sh "git push origin ${buildTag}"
+// }
+//                 }
+//             }
+//         }
         stage('Build and Push Docker Image') {
             steps {
                 sh "docker login -u mahaarunachalam -p dckr_pat_Kiveg21MryV2aptjdom8IvsQTJA"
@@ -35,8 +29,8 @@ pipeline {
                 sh "docker push mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER}"
                 //stop and remove the container if already running with previous build number tag
 
-                // sh "docker stop $(docker ps -a -q --filter ancestor=mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER} --format="{{.ID}}")"
-                // sh "docker rm $(docker ps -a -q --filter ancestor=mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER} --format="{{.ID}}")"
+                sh "docker stop $(docker ps -a -q --filter ancestor=mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER-1} --format="{{.ID}}")"
+                sh "docker rm $(docker ps -a -q --filter ancestor=mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER-1} --format="{{.ID}}")"
                 sh "docker run -p 8080:8080 -d mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER}"
             }
         }
