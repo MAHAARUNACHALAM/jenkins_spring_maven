@@ -1,19 +1,12 @@
-#containerize this spring boot maven application
-
-# Start with a base image containing Java runtime
 FROM openjdk:8-jdk-alpine
 
-#working directory
-WORKDIR /home/ubuntu/app
+COPY --from=build /opt/app/target/*.jar app.jar
 
-# Add Maintainer Info
-LABEL maintainer=""
+ENV PORT 8080
 
-# Add a volume pointing to /tmp
-VOLUME /tmp
+EXPOSE $PORT
 
-# Make port 8080 available to the world outside this container
-EXPOSE 8080
+ENTRYPOINT ["java","-jar","-Xmx1024M","-Dserver.port=${PORT}","app.jar"]
 
 
 
