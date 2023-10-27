@@ -1,12 +1,19 @@
-FROM openjdk:8-jdk-alpine
+# Use an official OpenJDK runtime as a parent image
+FROM openjdk:17
 
-COPY --from=build /opt/app/target/*.jar app.jar
+# Set the working directory in the container
+WORKDIR /app
 
-ENV PORT 8080
+# Copy the Maven POM and source code into the container
+COPY pom.xml .
+COPY src ./src
 
-EXPOSE $PORT
+# Build the Maven project inside the container
+RUN mvn clean install
 
-ENTRYPOINT ["java","-jar","-Xmx1024M","-Dserver.port=${PORT}","app.jar"]
+# Specify the command to run your application
+CMD ["java", "-jar", "target/*.jar"]
+
 
 
 
