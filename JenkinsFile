@@ -14,10 +14,10 @@ pipeline {
                     def buildTag = "build-${BUILD_NUMBER}"
                     sh "echo Creating tag ${buildTag}"
                     
-                    withCredentials([gitUsernamePassword(credentialsId: 'git-credentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    withCredentials([gitUsernamePassword(credentialsId: '7c7f7ca3-160a-4584-bc51-0922d327e164',gitTooName:'Default')]) {
                         sh "git config --global user.email 'smahaarunachalam@gmail.com'"
                         sh "git config --global user.name 'mahaarunachalam'"
-                        
+
                     sh "git tag ${buildTag}"
                     sh "git push --tags"
                    }
