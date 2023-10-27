@@ -7,7 +7,9 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-RUN sudo apt-get update && sudo apt-get install maven
+
+RUN apt-get update
+RUN apt-get install -y maven
 
 RUN mvn clean install
 
