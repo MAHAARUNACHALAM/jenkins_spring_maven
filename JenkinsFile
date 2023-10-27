@@ -13,10 +13,20 @@ pipeline {
                 script {
                     def buildTag = "build-${BUILD_NUMBER}"
                     sh "echo Creating tag ${buildTag}"
-                    withCredentials([usernamePassword(credentialsId: '7c7f7ca3-160a-4584-bc51-0922d327e164')]) {
-                        sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
-                        sh "git push origin ${buildTag}"
-                    }
+                    sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
+                    //if we want to push the tag to remote repo then we need to add credentials
+                    //push the tag to remote repo by mentioning the credentials id, here 7c7f7ca3-160a-4584-bc51-0922d327e164 is the credentials id,repo url is https://github.com/MAHAARUNACHALAM/jenkins_spring_maven
+                    
+                   withCredentials([usernamePassword(credentialsId: '7c7f7ca3-160a-4584-bc51-0922d327e164', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+    sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
+    sh "git push origin ${buildTag}"
+}
+
+                    
+                    // withCredentials([usernamePassword(credentialsId: '7c7f7ca3-160a-4584-bc51-0922d327e164')]) {
+                    //     sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
+                    //     sh "git push origin ${buildTag}"
+                    // }
                 }
             }
         }
