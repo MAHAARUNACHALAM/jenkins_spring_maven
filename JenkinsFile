@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build and Test') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Create Git Tag') {
+            steps {
+                script {
+                    def buildTag = "build-${BUILD_NUMBER}"
+                    sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
+                    sh "git push origin ${buildTag}"
+                }
+            }
+        }
+        stage('Build and Push Docker Image') {
+            steps {
+                sh 'docker login -u mahaarunachalam -p dckr_pat_Kiveg21MryV2aptjdom8IvsQTJA'
+                sh 'docker build -t jenkinsmaven .'
+                sh 'docker tag jenkinsmaven:latest my-registry/jenkinsmaven:build-${BUILD_NUMBER}'
+                sh 'docker push mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER}'
+                sh 'docker run -p 8080:8080 -d mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER}'
+            }
+        }
+
+    }
+}
