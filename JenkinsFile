@@ -13,8 +13,10 @@ pipeline {
                 script {
                     def buildTag = "build-${BUILD_NUMBER}"
                     sh "echo Creating tag ${buildTag}"
-                    sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
-                    sh "git push origin ${buildTag}"
+                    withCredentials([usernamePassword(credentialsId: '7c7f7ca3-160a-4584-bc51-0922d327e164', usernameVariable: 'Username', passwordVariable: 'Password')]) {
+                        sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
+                        sh "git push origin ${buildTag}"
+                    }
                 }
             }
         }
