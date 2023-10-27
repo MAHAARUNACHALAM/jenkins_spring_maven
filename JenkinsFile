@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Build and Test') {
             steps {
+                //mvn clean package say version 17 not supported
                 sh "mvn clean package"
             }
         }
@@ -24,7 +25,7 @@ pipeline {
                 sh "docker tag jenkinsmaven:latest my-registry/jenkinsmaven:build-${BUILD_NUMBER}"
                 sh "docker push mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER}"
                 //stop and remove the container if already running with previous build number tag
-                
+
                 // sh "docker stop $(docker ps -a -q --filter ancestor=mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER} --format="{{.ID}}")"
                 // sh "docker rm $(docker ps -a -q --filter ancestor=mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER} --format="{{.ID}}")"
                 sh "docker run -p 8080:8080 -d mahaarunachalam/jenkinsmaven:build-${BUILD_NUMBER}"
