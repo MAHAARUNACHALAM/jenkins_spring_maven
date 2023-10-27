@@ -13,7 +13,7 @@ pipeline {
                 script {
                     def buildTag = "build-${BUILD_NUMBER}"
                     sh "echo Creating tag ${buildTag}"
-                    sh "git tag -a ${buildTag} -m "Jenkins build ${BUILD_NUMBER}""
+                    sh "git tag -a ${buildTag} -m 'Jenkins build ${BUILD_NUMBER}'"
                     sh "git push origin ${buildTag}"
                 }
             }
